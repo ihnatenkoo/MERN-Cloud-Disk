@@ -16,7 +16,6 @@ authRouter.post(
 	],
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
-		console.log(errors);
 
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ message: `Incorrect request` });
@@ -44,3 +43,26 @@ authRouter.post(
 		}
 	}
 );
+
+authRouter.post('/login', async (req, res) => {
+	try {
+		const { email, password } = req.body;
+		const user = await User.find({ email });
+
+		if (!user.length) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		const isPassValid = bcrypt.compareSync(password, user[0].password);
+
+		if (!isPassValid) {
+			return res.status(401).json({ message: 'Invalid password' });
+		}
+
+		console.log(user);
+		res.status(200).json('Authorized');
+	} catch (error) {
+		console.log(error);
+		res.send({ message: 'Server Error' });
+	}
+});
