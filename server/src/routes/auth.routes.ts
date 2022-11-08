@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
+import config from 'config';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import User from '../models/User';
 
 export const authRouter: Router = Router();
@@ -32,7 +34,7 @@ authRouter.post(
 					.json({ message: `User with email ${email} already exist` });
 			}
 
-			const hashPassword = await bcrypt.hash(password, 15);
+			const hashPassword = await bcrypt.hash(password, 8);
 			const user = new User({ email, password: hashPassword, avatar });
 			await user.save();
 
@@ -59,8 +61,20 @@ authRouter.post('/login', async (req, res) => {
 			return res.status(401).json({ message: 'Invalid password' });
 		}
 
-		console.log(user);
-		res.status(200).json('Authorized');
+		const token = jwt.sign({ id: user[0].id }, config.get('secret-key'), {
+			expiresIn: '1h',
+		});
+
+		res.json({
+			token,
+			user: {
+				id: user[0].id,
+				email: user[0].email,
+				diskSpace: user[0].diskSpace,
+				usedSpace: user[0].usedSpace,
+				avatar: user[0].avatar,
+			},
+		});
 	} catch (error) {
 		console.log(error);
 		res.send({ message: 'Server Error' });
