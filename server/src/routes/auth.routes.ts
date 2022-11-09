@@ -24,7 +24,7 @@ authRouter.post(
 		}
 
 		try {
-			const { email, password, avatar } = req.body;
+			const { name, email, password } = req.body;
 
 			const isUserExist = await User.find({ email });
 
@@ -35,7 +35,7 @@ authRouter.post(
 			}
 
 			const hashPassword = await bcrypt.hash(password, 8);
-			const user = new User({ email, password: hashPassword, avatar });
+			const user = new User({ name, email, password: hashPassword });
 			await user.save();
 
 			return res.json({ message: 'User was created' });
