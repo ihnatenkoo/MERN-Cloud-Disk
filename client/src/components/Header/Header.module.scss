@@ -1,0 +1,30 @@
+.header {
+	padding: 0 24px;
+	margin-bottom: 40px;
+	height: 50px;
+
+	display: flex;
+	justify-content: space-between;
+
+	background-color: var(--blue);
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+	&__title {
+		font-size: 16px;
+		font-weight: 700;
+	}
+
+	&__intro,
+	&__nav {
+		color: var(--white);
+		display: flex;
+		align-items: center;
+		gap: 0 12px;
+	}
+
+	&__nav {
+		a:hover {
+			color: #fbbf24;
+		}
+	}
+}
