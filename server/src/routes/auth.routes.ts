@@ -24,18 +24,18 @@ authRouter.post(
 		}
 
 		try {
-			const { email, password, avatar } = req.body;
+			const { name, email, password } = req.body;
 
-			const isUserExist = await User.find({ email });
+			const isUserExist = await User.findOne({ email });
 
-			if (isUserExist.length) {
+			if (isUserExist) {
 				return res
 					.status(400)
 					.json({ message: `User with email ${email} already exist` });
 			}
 
 			const hashPassword = await bcrypt.hash(password, 8);
-			const user = new User({ email, password: hashPassword, avatar });
+			const user = new User({ name, email, password: hashPassword });
 			await user.save();
 
 			return res.json({ message: 'User was created' });
@@ -49,30 +49,30 @@ authRouter.post(
 authRouter.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		const user = await User.find({ email });
+		const user = await User.findOne({ email });
 
-		if (!user.length) {
+		if (!user) {
 			return res.status(404).json({ message: 'User not found' });
 		}
 
-		const isPassValid = bcrypt.compareSync(password, user[0].password);
+		const isPassValid = bcrypt.compareSync(password, user.password);
 
 		if (!isPassValid) {
 			return res.status(401).json({ message: 'Invalid password' });
 		}
 
-		const token = jwt.sign({ id: user[0].id }, config.get('secret-key'), {
+		const token = jwt.sign({ id: user.id }, config.get('secret-key'), {
 			expiresIn: '1h',
 		});
 
 		res.json({
 			token,
 			user: {
-				id: user[0].id,
-				email: user[0].email,
-				diskSpace: user[0].diskSpace,
-				usedSpace: user[0].usedSpace,
-				avatar: user[0].avatar,
+				id: user.id,
+				email: user.email,
+				diskSpace: user.diskSpace,
+				usedSpace: user.usedSpace,
+				avatar: user.avatar,
 			},
 		});
 	} catch (error) {

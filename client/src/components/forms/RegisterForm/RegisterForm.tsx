@@ -1,24 +1,37 @@
-import axios from 'axios';
-import { ChangeEvent, FC, useState } from 'react';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import FormBtn from '../../ui/FormBtn/FormBtn';
 import s from './RegisterForm.module.scss';
 
 const RegisterForm: FC = () => {
+	const [reqStatus, setReqStatus] = useState({ type: '', message: '' });
 	const [data, setData] = useState({
 		name: '',
 		email: '',
 		password: '',
 	});
 
-	const onRegisterDataSubmit = async (): Promise<void> => {
+	const onRegisterDataSubmit = async (
+		e: FormEvent<HTMLFormElement>
+	): Promise<void> => {
+		e.preventDefault();
 		try {
-			const req = await axios.post(import.meta.env.VITE_URL, {
-				name: data.name,
-				email: data.email,
-				password: data.password,
+			const req = await axios.post(
+				`${import.meta.env.VITE_URL}/api/auth/register`,
+				{
+					name: data.name,
+					email: data.email,
+					password: data.password,
+				}
+			);
+			setReqStatus({ type: 'success', message: req.data.message });
+			setData({ name: '', email: '', password: '' });
+		} catch (e) {
+			setReqStatus({
+				type: 'error',
+				//@ts-ignore
+				message: e.response?.data.message,
 			});
-		} catch (error) {
-			console.log(error);
 		}
 	};
 
@@ -51,6 +64,13 @@ const RegisterForm: FC = () => {
 			/>
 
 			<FormBtn className={s.btn}>Register</FormBtn>
+
+			{reqStatus.type === 'success' && (
+				<p className={s.success}>{reqStatus.message}</p>
+			)}
+			{reqStatus.type === 'error' && (
+				<p className={s.error}>{reqStatus.message}</p>
+			)}
 		</form>
 	);
 };
