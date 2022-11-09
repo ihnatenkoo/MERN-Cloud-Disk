@@ -1,0 +1,19 @@
+@mixin form {
+	padding: 16px;
+	width: 400px;
+	max-width: 100%;
+	border-radius: 12px;
+	background-color: var(--white);
+
+	display: flex;
+	flex-direction: column;
+	gap: 12px 0;
+
+	input {
+		padding-bottom: 8px;
+		border: none;
+		border-bottom: 1px solid var(--gray-light);
+		outline: none;
+		cursor: pointer;
+	}
+}
