@@ -1,5 +1,22 @@
-const App = () => {
-	return <h1>Hello App</h1>;
+import { FC } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Header from './components/Header/Header';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
+
+const App: FC = () => {
+	return (
+		<BrowserRouter>
+			<Header />
+			<main>
+				<Routes>
+					<Route path="/" element={<h1>Main</h1>} />
+					<Route path="/register" element={<RegisterPage />} />
+					<Route path="/login" element={<LoginPage />} />
+				</Routes>
+			</main>
+		</BrowserRouter>
+	);
 };
 
 export default App;

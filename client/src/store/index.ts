@@ -3,7 +3,7 @@ import user from './user/user.slice';
 
 export const store = configureStore({
 	reducer: { user },
-	devTools: import.meta.env['NODE_ENV'] !== 'production',
+	devTools: import.meta.env.MODE !== 'production',
 });
 
 export type RootState = ReturnType<typeof store.getState>;

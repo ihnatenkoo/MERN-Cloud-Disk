@@ -1,0 +1,10 @@
+@import '../../../mixins/form.scss';
+
+.form {
+	@include form;
+}
+
+.btn {
+	margin-top: 12px;
+	align-self: flex-end;
+}

@@ -1,0 +1,54 @@
+@import 'material-icons/iconfont/material-icons.css';
+
+:root {
+	font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 24px;
+	font-weight: 400;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+
+	--blue: #0ea5e9;
+	--white: #fff;
+	--main-bg: #f9fafb;
+	--gray-light: #f3f4f6;
+}
+
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	min-height: 100vh;
+	background-color: var(--main-bg);
+}
+
+h1,
+h2,
+h3 {
+	margin: 0;
+}
+
+button {
+	padding: 0;
+	border: none;
+	font-size: 1em;
+	font-weight: 500;
+	font-family: inherit;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+main {
+	margin: 0 auto;
+	padding: 0 8px;
+	width: 1190px;
+	max-width: 100%;
+}
