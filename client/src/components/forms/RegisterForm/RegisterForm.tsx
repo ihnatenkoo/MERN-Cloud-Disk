@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import FormBtn from '../../ui/FormBtn/FormBtn';
 import s from './RegisterForm.module.scss';
