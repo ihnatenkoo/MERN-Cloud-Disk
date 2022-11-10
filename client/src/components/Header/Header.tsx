@@ -1,8 +1,17 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { logout } from '../../store/user/user.slice';
 import s from './Header.module.scss';
 
 const Header: FC = () => {
+	const dispatch = useAppDispatch();
+	const isAuth = useAppSelector((state) => state.user.isAuth);
+
+	const onLogoutHandler = () => {
+		dispatch(logout());
+	};
+
 	return (
 		<header className={s.header}>
 			<Link to="/" className={s.header__intro}>
@@ -11,8 +20,16 @@ const Header: FC = () => {
 			</Link>
 
 			<nav className={s.header__nav}>
-				<Link to="/login">Login</Link>
-				<Link to="/register">Register</Link>
+				{isAuth ? (
+					<a onClick={onLogoutHandler} className={s.logout}>
+						Logout
+					</a>
+				) : (
+					<>
+						<Link to="/login">Login</Link>
+						<Link to="/register">Register</Link>
+					</>
+				)}
 			</nav>
 		</header>
 	);
