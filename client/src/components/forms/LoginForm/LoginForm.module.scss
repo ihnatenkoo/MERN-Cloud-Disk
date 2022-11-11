@@ -2,9 +2,21 @@
 
 .form {
 	@include form;
-}
 
-.btn {
-	margin-top: 12px;
-	align-self: flex-end;
+	&__footer {
+		margin-top: 12px;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+
+		&_link {
+			font-style: italic;
+			color: var(--blue);
+			text-decoration: underline;
+
+			&:hover {
+				color: var(--gold);
+			}
+		}
+	}
 }

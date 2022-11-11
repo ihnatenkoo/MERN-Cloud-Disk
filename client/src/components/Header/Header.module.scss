@@ -25,12 +25,12 @@
 	&__nav {
 		a:hover,
 		.logout:hover {
-			color: #fbbf24;
+			color: var(--gold);
 			cursor: pointer;
 		}
 
 		&_logout {
-			color: #fbbf24;
+			color: var(--gold);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../../hooks';
 import { loginUser } from '../../../store/user/user.slice';
 import FormBtn from '../../ui/FormBtn/FormBtn';
@@ -39,7 +40,12 @@ const LoginForm: FC = () => {
 				onChange={onChangeValue}
 			/>
 
-			<FormBtn className={s.btn}>Log in</FormBtn>
+			<div className={s.form__footer}>
+				<Link to="/register" className={s.form__footer_link}>
+					Register
+				</Link>
+				<FormBtn className={s.btn}>Log in</FormBtn>
+			</div>
 		</form>
 	);
 };
