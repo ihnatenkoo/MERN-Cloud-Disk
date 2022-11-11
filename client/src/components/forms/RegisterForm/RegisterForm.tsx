@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FormBtn from '../../ui/FormBtn/FormBtn';
 import s from './RegisterForm.module.scss';
 
 const RegisterForm: FC = () => {
+	const navigate = useNavigate();
 	const [reqStatus, setReqStatus] = useState({ type: '', message: '' });
 	const [data, setData] = useState({
 		name: '',
@@ -24,8 +26,7 @@ const RegisterForm: FC = () => {
 					password: data.password,
 				}
 			);
-			setReqStatus({ type: 'success', message: req.data.message });
-			setData({ name: '', email: '', password: '' });
+			navigate('/login');
 		} catch (e) {
 			setReqStatus({
 				type: 'error',
