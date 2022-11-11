@@ -4,6 +4,7 @@ import config from 'config';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 export const authRouter: Router = Router();
 
@@ -100,3 +101,31 @@ authRouter.post(
 		}
 	}
 );
+
+authRouter.get('/', authMiddleware, async (req: Request, res: Response) => {
+	try {
+		const user = await User.findOne({ _id: req.user.id });
+
+		if (!user) {
+			return res.status(404);
+		}
+
+		const token = jwt.sign({ id: user.id }, config.get('secret-key'), {
+			expiresIn: '1h',
+		});
+
+		return res.json({
+			token,
+			user: {
+				name: user.name,
+				id: user.id,
+				email: user.email,
+				diskSpace: user.diskSpace,
+				usedSpace: user.usedSpace,
+				avatar: user.avatar,
+			},
+		});
+	} catch (error) {
+		res.send({ message: 'Server Error' });
+	}
+});
