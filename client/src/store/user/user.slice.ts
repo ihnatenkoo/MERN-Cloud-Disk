@@ -28,6 +28,16 @@ export const loginUser = createAsyncThunk(
 	}
 );
 
+export const authUser = createAsyncThunk('user/auth', async () => {
+	const token = localStorage.getItem('token');
+
+	const { data } = await axios.get(`${import.meta.env.VITE_URL}/api/auth/`, {
+		headers: { Authorization: `Bearer ${token}` },
+	});
+
+	return data;
+});
+
 export const userSlice = createSlice({
 	name: 'user',
 	initialState,
@@ -46,6 +56,16 @@ export const userSlice = createSlice({
 				localStorage.setItem('token', action.payload.token);
 			})
 			.addCase(loginUser.rejected, (state) => {
+				state.currentUser = null;
+				state.isAuth = false;
+				localStorage.removeItem('token');
+			})
+			.addCase(authUser.fulfilled, (state, action) => {
+				state.currentUser = action.payload.user;
+				state.isAuth = true;
+				localStorage.setItem('token', action.payload.token);
+			})
+			.addCase(authUser.rejected, (state) => {
 				state.currentUser = null;
 				state.isAuth = false;
 				localStorage.removeItem('token');
