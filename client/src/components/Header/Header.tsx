@@ -7,6 +7,7 @@ import s from './Header.module.scss';
 const Header: FC = () => {
 	const dispatch = useAppDispatch();
 	const isAuth = useAppSelector((state) => state.user.isAuth);
+	const userName = useAppSelector((state) => state.user.currentUser?.name);
 
 	const onLogoutHandler = () => {
 		dispatch(logout());
@@ -21,9 +22,12 @@ const Header: FC = () => {
 
 			<nav className={s.header__nav}>
 				{isAuth ? (
-					<a onClick={onLogoutHandler} className={s.logout}>
-						Logout
-					</a>
+					<>
+						<span>Welcome {userName}</span>
+						<a onClick={onLogoutHandler} className={s.header__nav_logout}>
+							Logout
+						</a>
+					</>
 				) : (
 					<>
 						<Link to="/login">Login</Link>
