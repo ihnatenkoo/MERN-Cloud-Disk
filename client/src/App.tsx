@@ -20,12 +20,8 @@ const App: FC = () => {
 			<main>
 				<Routes>
 					<Route path="/" element={<h1>Main</h1>} />
-					{!isAuth && (
-						<>
-							<Route path="/login" element={<LoginPage />} />
-							<Route path="/register" element={<RegisterPage />} />
-						</>
-					)}
+					<Route path="/login" element={<LoginPage />} />
+					<Route path="/register" element={<RegisterPage />} />
 				</Routes>
 			</main>
 		</BrowserRouter>
