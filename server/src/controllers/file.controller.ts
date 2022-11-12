@@ -28,4 +28,17 @@ export class FileController {
 			res.status(400).json(e);
 		}
 	}
+
+	async getFiles(req: Request, res: Response) {
+		try {
+			const files = await File.find({
+				user: req.user.id,
+				parent: req.query.parent,
+			});
+			res.status(200).json(files);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ message: 'Fetch files error' });
+		}
+	}
 }
