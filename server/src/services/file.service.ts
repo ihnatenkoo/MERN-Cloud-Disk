@@ -1,5 +1,7 @@
 import fs from 'fs';
+import { injectable } from 'inversify';
 
+@injectable()
 export class FileService {
 	createDir(file: any) {
 		const filePath = `${__dirname}\\../files\\${file.user}\\${file.path}`;

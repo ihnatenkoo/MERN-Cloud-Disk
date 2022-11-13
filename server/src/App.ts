@@ -3,23 +3,26 @@ import { Server } from 'http';
 import config from 'config';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import { inject, injectable } from 'inversify';
+import 'reflect-metadata';
+import { TYPES } from './types';
 import { FileController } from './controllers/file.controller';
 import { AuthController } from './controllers/auth.controller';
 
+@injectable()
 export class App {
 	app: Express;
 	server: Server;
 	port: number;
 	dbURL: string;
-	fileController: FileController;
-	authController: AuthController;
 
-	constructor(fileController: FileController, authController: AuthController) {
+	constructor(
+		@inject(TYPES.FileController) private fileController: FileController,
+		@inject(TYPES.AuthController) private authController: AuthController
+	) {
 		this.app = express();
 		this.port = config.get('serverPort');
 		this.dbURL = config.get('dbURL');
-		this.fileController = fileController;
-		this.authController = authController;
 	}
 
 	route() {

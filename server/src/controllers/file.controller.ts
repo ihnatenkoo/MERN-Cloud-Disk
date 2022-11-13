@@ -4,11 +4,12 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import { FileService } from '../services/file.service';
 import { ExpressReturnType } from '../common/route.interface';
 import { BaseController } from '../common/base.controller';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../types';
 
+@injectable()
 export class FileController extends BaseController {
-	fileService: FileService;
-
-	constructor() {
+	constructor(@inject(TYPES.FileService) private fileService: FileService) {
 		super();
 		this.bindRoutes([
 			{
@@ -24,8 +25,6 @@ export class FileController extends BaseController {
 				middlewares: [new authMiddleware()],
 			},
 		]);
-
-		this.fileService = new FileService();
 	}
 
 	async createDir(
