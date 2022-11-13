@@ -1,23 +1,25 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import config from 'config';
-import cors from 'cors';
-import { authRouter } from './routes/auth.routes';
+import { Container, ContainerModule, interfaces } from 'inversify';
+import { App } from './App';
+import { FileController } from './controllers/file.controller';
+import { AuthController } from './controllers/auth.controller';
+import { TYPES } from './types';
+import { FileService } from './services/file.service';
 
-const app = express();
-const PORT = config.get('serverPort');
-
-app.use(cors());
-app.use(express.json());
-app.use('/api/auth', authRouter);
+export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
+	bind<App>(TYPES.Application).to(App);
+	bind<FileController>(TYPES.FileController).to(FileController);
+	bind<AuthController>(TYPES.AuthController).to(AuthController);
+	bind<FileService>(TYPES.FileService).to(FileService);
+});
 
 const start = async () => {
-	try {
-		await mongoose.connect(config.get('dbURL'));
+	const appContainer = new Container();
+	appContainer.load(appBindings);
 
-		app.listen(PORT, () => {
-			console.log('Server started on port ', PORT);
-		});
+	const app = appContainer.get<App>(TYPES.Application);
+
+	try {
+		await app.init();
 	} catch (error) {
 		console.log(error);
 	}
