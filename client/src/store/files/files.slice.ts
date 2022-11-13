@@ -3,12 +3,12 @@ import axios from 'axios';
 import { IFile } from '../../types';
 
 interface InitialState {
-	files: Array<IFile> | null;
+	files: Array<IFile>;
 	currentDir: string;
 }
 
 const initialState: InitialState = {
-	files: null,
+	files: [],
 	currentDir: '',
 };
 
@@ -37,7 +37,7 @@ export const filesSlice = createSlice({
 			state.files = action.payload;
 		});
 		builder.addCase(getFiles.rejected, (state) => {
-			state.files = null;
+			state.files = [];
 		});
 	},
 });

@@ -1,0 +1,37 @@
+.list {
+	padding: 20px 0;
+	border-radius: 12px;
+	background-color: var(--white);
+	box-shadow: 1px 1px 4px 4px var(--gray-light);
+
+	&__header {
+		padding-bottom: 12px;
+		border-bottom: 2px solid rgba($color: #0ea5e9, $alpha: 0.5);
+		display: grid;
+		grid-template-columns: 1fr 4fr repeat(4, 1fr);
+		font-weight: 600;
+
+		&_name {
+			grid-column-start: 2;
+		}
+		&_date {
+			grid-column-start: 5;
+			justify-self: center;
+		}
+		&_size {
+			grid-column-start: 6;
+			justify-self: center;
+		}
+	}
+
+	&__content {
+		padding-top: 6px;
+
+		&_empty {
+			margin-top: 12px;
+			text-align: center;
+			font-weight: 600;
+			color: var(--blue);
+		}
+	}
+}

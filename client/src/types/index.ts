@@ -12,10 +12,12 @@ export interface ILoginData {
 }
 
 export interface IFile {
+	_id: string;
 	name: string;
 	type: string;
 	size: number;
 	path: string;
 	user: string;
+	date: string;
 	children: Array<string>;
 }
