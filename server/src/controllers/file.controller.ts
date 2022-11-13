@@ -1,10 +1,37 @@
 import { Request, Response } from 'express';
-import { FileService } from '../services/file.service';
 import File from '../models/File';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import { FileService } from '../services/file.service';
+import { ExpressReturnType } from '../common/route.interface';
+import { BaseController } from '../common/base.controller';
 
-const fileService = new FileService();
-export class FileController {
-	async createDir(req: Request, res: Response) {
+export class FileController extends BaseController {
+	fileService: FileService;
+
+	constructor() {
+		super();
+		this.bindRoutes([
+			{
+				path: '/',
+				method: 'post',
+				handler: this.createDir,
+				middlewares: [new authMiddleware()],
+			},
+			{
+				path: '/',
+				method: 'get',
+				handler: this.getFiles,
+				middlewares: [new authMiddleware()],
+			},
+		]);
+
+		this.fileService = new FileService();
+	}
+
+	async createDir(
+		req: Request,
+		res: Response
+	): Promise<ExpressReturnType | undefined> {
 		try {
 			const { name, type, parent } = req.body;
 			const file = new File({ name, type, parent, user: req.user.id });
@@ -14,10 +41,10 @@ export class FileController {
 
 			if (!parentFile) {
 				file.path = name;
-				await fileService.createDir(file);
+				await this.fileService.createDir(file);
 			} else {
 				file.path = `${parentFile.path}\\${file.name}`;
-				await fileService.createDir(file);
+				await this.fileService.createDir(file);
 				parentFile.children.push(file.id);
 				await parentFile.save();
 			}
@@ -29,7 +56,7 @@ export class FileController {
 		}
 	}
 
-	async getFiles(req: Request, res: Response) {
+	async getFiles(req: Request, res: Response): Promise<void> {
 		try {
 			const files = await File.find({
 				user: req.user.id,

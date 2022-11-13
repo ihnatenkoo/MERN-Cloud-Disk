@@ -7,3 +7,5 @@ export interface IControllerRoute {
 	handler: (req: Request, res: Response, next: NextFunction) => void;
 	middlewares?: Array<IMiddleware>;
 }
+
+export type ExpressReturnType = Response<any, Record<string, any>>;
