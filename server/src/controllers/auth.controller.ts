@@ -5,7 +5,10 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/User';
 import File from '../models/File';
-import { authMiddleware } from '../middlewares/auth.middleware';
+import { UserLoginDto } from '../dto/user.login.dto';
+import { UserRegisterDto } from '../dto/user.register.dto';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
+import { ValidateMiddleware } from '../middlewares/validate.middleware';
 import { FileService } from '../services/file.service';
 import { BaseController } from '../common/base.controller';
 
@@ -18,17 +21,19 @@ export class AuthController extends BaseController {
 				path: '/',
 				method: 'get',
 				handler: this.checkAuth,
-				middlewares: [new authMiddleware()],
+				middlewares: [new AuthMiddleware()],
 			},
 			{
 				path: '/register',
 				method: 'post',
 				handler: this.register,
+				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
 			{
 				path: '/login',
 				method: 'post',
 				handler: this.login,
+				middlewares: [new ValidateMiddleware(UserLoginDto)],
 			},
 		]);
 		this.fileService = new FileService();
@@ -36,7 +41,7 @@ export class AuthController extends BaseController {
 
 	async register(req: Request, res: Response) {
 		try {
-			const { name, email, password } = req.body;
+			const { name, email, password }: UserRegisterDto = req.body;
 
 			const isUserExist = await User.findOne({ email });
 
@@ -60,7 +65,7 @@ export class AuthController extends BaseController {
 
 	async login(req: Request, res: Response) {
 		try {
-			const { email, password } = req.body;
+			const { email, password }: UserLoginDto = req.body;
 			const user = await User.findOne({ email });
 
 			if (!user) {

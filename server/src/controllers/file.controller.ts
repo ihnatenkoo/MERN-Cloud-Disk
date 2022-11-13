@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import File from '../models/File';
-import { authMiddleware } from '../middlewares/auth.middleware';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { FileService } from '../services/file.service';
 import { ExpressReturnType } from '../common/route.interface';
 import { BaseController } from '../common/base.controller';
@@ -16,13 +16,13 @@ export class FileController extends BaseController {
 				path: '/',
 				method: 'post',
 				handler: this.createDir,
-				middlewares: [new authMiddleware()],
+				middlewares: [new AuthMiddleware()],
 			},
 			{
 				path: '/',
 				method: 'get',
 				handler: this.getFiles,
-				middlewares: [new authMiddleware()],
+				middlewares: [new AuthMiddleware()],
 			},
 		]);
 	}

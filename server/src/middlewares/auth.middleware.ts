@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import { Request, Response, NextFunction } from 'express';
 
-export class authMiddleware {
+export class AuthMiddleware {
 	execute(req: Request, res: Response, next: NextFunction) {
 		if (req.method === 'OPTION') {
 			return next();
