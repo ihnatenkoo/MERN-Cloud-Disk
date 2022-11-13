@@ -10,3 +10,12 @@ export interface ILoginData {
 	email: string;
 	password: string;
 }
+
+export interface IFile {
+	name: string;
+	type: string;
+	size: number;
+	path: string;
+	user: string;
+	children: Array<string>;
+}
