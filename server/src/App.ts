@@ -16,12 +16,12 @@ export class App {
 		this.dbURL = config.get('dbURL');
 	}
 
-	middleware() {
+	middleware(): void {
 		this.app.use(cors());
 		this.app.use(express.json());
 	}
 
-	async init() {
+	async init(): Promise<void> {
 		this.middleware();
 		await mongoose.connect(this.dbURL);
 		this.server = this.app.listen(this.port, () =>
