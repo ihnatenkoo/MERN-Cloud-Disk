@@ -3,7 +3,7 @@ import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../../hooks';
 import { loginUser } from '../../../store/user/user.slice';
-import FormBtn from '../../ui/FormBtn/FormBtn';
+import FormBtn from '../../ui/MainBtn/MainBtn';
 import s from './LoginForm.module.scss';
 
 const LoginForm: FC = () => {

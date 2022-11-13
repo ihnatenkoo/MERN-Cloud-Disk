@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FormBtn from '../../ui/FormBtn/FormBtn';
+import FormBtn from '../../ui/MainBtn/MainBtn';
 import s from './RegisterForm.module.scss';
 
 const RegisterForm: FC = () => {
