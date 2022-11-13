@@ -6,7 +6,6 @@ import s from './RegisterForm.module.scss';
 
 const RegisterForm: FC = () => {
 	const navigate = useNavigate();
-	const [reqStatus, setReqStatus] = useState({ type: '', message: '' });
 	const [data, setData] = useState({
 		name: '',
 		email: '',
@@ -28,11 +27,7 @@ const RegisterForm: FC = () => {
 			);
 			navigate('/login');
 		} catch (e) {
-			setReqStatus({
-				type: 'error',
-				//@ts-ignore
-				message: e.response?.data.message,
-			});
+			console.log(e);
 		}
 	};
 
@@ -65,13 +60,6 @@ const RegisterForm: FC = () => {
 			/>
 
 			<FormBtn className={s.btn}>Register</FormBtn>
-
-			{reqStatus.type === 'success' && (
-				<p className={s.success}>{reqStatus.message}</p>
-			)}
-			{reqStatus.type === 'error' && (
-				<p className={s.error}>{reqStatus.message}</p>
-			)}
 		</form>
 	);
 };
