@@ -13,10 +13,10 @@ const initialState: InitialState = {
 };
 
 export const getFiles = createAsyncThunk(
-	'files/getAll',
+	'files/getFiles',
 	async (parentId?: string) => {
 		const { data } = await axios.get(
-			`${import.meta.env.VITE_URL}/api/files${
+			`${import.meta.env.VITE_URL}/api/files/${
 				parentId ? '?parent=' + parentId : ''
 			}`,
 			{
@@ -24,6 +24,25 @@ export const getFiles = createAsyncThunk(
 			}
 		);
 
+		return data;
+	}
+);
+
+export const createFolder = createAsyncThunk(
+	'files/createFolder',
+	async (folderInfo: { name: string; dirId?: string }) => {
+		const { name, dirId } = folderInfo;
+		const { data } = await axios.post(
+			`${import.meta.env.VITE_URL}/api/files`,
+			{
+				name,
+				type: 'dir',
+				dirId,
+			},
+			{
+				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+			}
+		);
 		return data;
 	}
 );
@@ -38,6 +57,9 @@ export const filesSlice = createSlice({
 		});
 		builder.addCase(getFiles.rejected, (state) => {
 			state.files = [];
+		});
+		builder.addCase(createFolder.fulfilled, (state, action) => {
+			state.files.push(action.payload);
 		});
 	},
 });
