@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { createFolder } from '../../store/files/files.slice';
-import FormBtn from '../ui/MainBtn/MainBtn';
+import { useAppDispatch } from '../../hooks';
+import { popDirStack } from '../../store/files/files.slice';
+import MainBtn from '../ui/MainBtn/MainBtn';
 import s from './FileNavigation.module.scss';
 
 interface IFileNavigation {
@@ -10,21 +10,24 @@ interface IFileNavigation {
 
 const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 	const dispatch = useAppDispatch();
-	const currentDir = useAppSelector((state) => state.files.currentDir);
 
 	const handleFolderCreating = () => {
 		setShowPopup(true);
 	};
 
+	const handleBackPathClick = () => {
+		dispatch(popDirStack());
+	};
+
 	return (
 		<nav className={s.nav}>
 			<div className={s.nav__left}>
-				<FormBtn className={s.btn__back}>
+				<MainBtn handler={handleBackPathClick} className={s.btn__back}>
 					<span className="material-icons-outlined">reply</span>
-				</FormBtn>
-				<FormBtn handler={handleFolderCreating} className={s.btn__create}>
+				</MainBtn>
+				<MainBtn handler={handleFolderCreating} className={s.btn__create}>
 					Create Folder
-				</FormBtn>
+				</MainBtn>
 			</div>
 		</nav>
 	);
