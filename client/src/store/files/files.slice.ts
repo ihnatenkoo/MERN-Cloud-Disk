@@ -4,13 +4,13 @@ import { IFile } from '../../types';
 
 interface InitialState {
 	files: Array<IFile>;
-	currentDir: string;
-	dirStack: Array<string>;
+	currentDir: string | null;
+	dirStack: Array<string | null>;
 }
 
 const initialState: InitialState = {
 	files: [],
-	currentDir: '',
+	currentDir: null,
 	dirStack: [],
 };
 
@@ -32,14 +32,14 @@ export const getFiles = createAsyncThunk(
 
 export const createFolder = createAsyncThunk(
 	'files/createFolder',
-	async (folderInfo: { name: string; dirId?: string }) => {
-		const { name, dirId } = folderInfo;
+	async (folderInfo: { name: string; parent: string | null }) => {
+		const { name, parent } = folderInfo;
 		const { data } = await axios.post(
 			`${import.meta.env.VITE_URL}/api/files`,
 			{
 				name,
 				type: 'dir',
-				parent: dirId,
+				parent,
 			},
 			{
 				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -56,7 +56,7 @@ export const filesSlice = createSlice({
 		changeCurrentDir: (state, action: PayloadAction<string>) => {
 			state.currentDir = action.payload;
 		},
-		pushDirStack: (state, action: PayloadAction<string>) => {
+		pushDirStack: (state, action: PayloadAction<string | null>) => {
 			state.dirStack.push(action.payload);
 		},
 		popDirStack: (state) => {

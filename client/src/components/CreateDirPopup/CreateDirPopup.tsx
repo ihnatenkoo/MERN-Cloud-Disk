@@ -24,7 +24,7 @@ const CreateDirPopup: FC<ICreateDirPopup> = ({ showPopup, setShowPopup }) => {
 	};
 
 	const onCreateDir = () => {
-		dispatch(createFolder({ name: dirName, dirId: currentDir }));
+		dispatch(createFolder({ name: dirName, parent: currentDir }));
 		setDirName('');
 		setShowPopup(false);
 	};
