@@ -32,14 +32,14 @@ export const getFiles = createAsyncThunk(
 
 export const createFolder = createAsyncThunk(
 	'files/createFolder',
-	async (folderInfo: { name: string; parent?: string }) => {
-		const { name, parent } = folderInfo;
+	async (folderInfo: { name: string; dirId?: string }) => {
+		const { name, dirId } = folderInfo;
 		const { data } = await axios.post(
 			`${import.meta.env.VITE_URL}/api/files`,
 			{
 				name,
 				type: 'dir',
-				parent,
+				parent: dirId,
 			},
 			{
 				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },

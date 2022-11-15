@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { popDirStack } from '../../store/files/files.slice';
 import MainBtn from '../ui/MainBtn/MainBtn';
 import s from './FileNavigation.module.scss';
@@ -10,6 +10,7 @@ interface IFileNavigation {
 
 const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 	const dispatch = useAppDispatch();
+	const dirStack = useAppSelector((state) => state.files.dirStack);
 
 	const handleFolderCreating = () => {
 		setShowPopup(true);
@@ -22,7 +23,11 @@ const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 	return (
 		<nav className={s.nav}>
 			<div className={s.nav__left}>
-				<MainBtn handler={handleBackPathClick} className={s.btn__back}>
+				<MainBtn
+					disabled={!dirStack.length}
+					handler={handleBackPathClick}
+					className={s.btn__back}
+				>
 					<span className="material-icons-outlined">reply</span>
 				</MainBtn>
 				<MainBtn handler={handleFolderCreating} className={s.btn__create}>

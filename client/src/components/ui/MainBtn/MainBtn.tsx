@@ -4,12 +4,22 @@ import cn from 'classnames';
 
 interface IBtn extends PropsWithChildren {
 	className?: string;
+	disabled?: boolean;
 	handler?: (() => void) | undefined;
 }
 
-const MainBtn: FC<IBtn> = ({ children, className, handler }) => {
+const MainBtn: FC<IBtn> = ({
+	children,
+	className,
+	handler,
+	disabled = false,
+}) => {
 	return (
-		<button onClick={handler} className={cn(s.btn, className)}>
+		<button
+			onClick={handler}
+			className={cn(s.btn, className, { [s.disabled]: disabled })}
+			disabled={disabled}
+		>
 			{children}
 		</button>
 	);
