@@ -1,18 +1,18 @@
-import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../hooks';
+import { FC, useState } from 'react';
+import CreateDirPopup from '../../components/CreateDirPopup/CreateDirPopup';
+import FileList from '../../components/FileList/FileList';
+import FileNavigation from '../../components/FileNavigation/FileNavigation';
 
 const MainPage: FC = () => {
-	const navigate = useNavigate();
-	const isAuth = useAppSelector((state) => state.user.isAuth);
+	const [showPopup, setShowPopup] = useState<boolean>(false);
 
-	useEffect(() => {
-		if (!isAuth) {
-			return navigate('/login');
-		}
-	}, [isAuth]);
-
-	return <div>MainPage</div>;
+	return (
+		<section>
+			<FileNavigation setShowPopup={setShowPopup} />
+			<FileList />
+			<CreateDirPopup showPopup={showPopup} setShowPopup={setShowPopup} />
+		</section>
+	);
 };
 
 export default MainPage;

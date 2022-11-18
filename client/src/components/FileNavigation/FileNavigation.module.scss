@@ -1,0 +1,19 @@
+.nav {
+	margin-bottom: 30px;
+
+	&__left {
+		display: flex;
+		gap: 0 12px;
+		align-items: center;
+	}
+}
+
+.btn {
+	&__create {
+		width: 120px;
+	}
+	&__back {
+		padding: 2px 6px;
+		width: auto;
+	}
+}

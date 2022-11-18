@@ -8,7 +8,12 @@
 
 	transition: all 0.1s ease-in;
 
-	&:hover {
+	&:not(.disabled):hover {
 		box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.35);
+	}
+
+	&.disabled {
+		opacity: 0.8;
+		background-color: var(--gray);
 	}
 }

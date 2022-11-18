@@ -1,0 +1,25 @@
+.file {
+	padding: 6px 0;
+	display: grid;
+	grid-template-columns: 1fr 4fr repeat(4, 1fr);
+	border-bottom: 1px solid transparent;
+	cursor: pointer;
+
+	&:hover {
+		border-color: var(--gray);
+		font-weight: 600;
+	}
+
+	&__date {
+		grid-column-start: 5;
+	}
+	&__size {
+		grid-column-start: 6;
+	}
+
+	&__type,
+	&__date,
+	&__size {
+		justify-self: center;
+	}
+}
