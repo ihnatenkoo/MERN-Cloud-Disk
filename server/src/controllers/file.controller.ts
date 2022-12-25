@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
-import File from '../models/File';
+import { UploadedFile } from 'express-fileupload';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { FileService } from '../services/file.service';
 import { ExpressReturnType } from '../common/route.interface';
 import { BaseController } from '../common/base.controller';
 import { inject, injectable } from 'inversify';
+import fs from 'fs';
 import { TYPES } from '../types';
+import File from '../models/File';
+import User from '../models/User';
 
 @injectable()
 export class FileController extends BaseController {
@@ -16,6 +19,12 @@ export class FileController extends BaseController {
 				path: '/',
 				method: 'post',
 				handler: this.createDir,
+				middlewares: [new AuthMiddleware()],
+			},
+			{
+				path: '/upload',
+				method: 'post',
+				handler: this.uploadFile,
 				middlewares: [new AuthMiddleware()],
 			},
 			{
@@ -65,6 +74,60 @@ export class FileController extends BaseController {
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ message: 'Fetch files error' });
+		}
+	}
+
+	async uploadFile(req: Request, res: Response) {
+		try {
+			const file = req.files?.file as UploadedFile;
+
+			const parent = await File.findOne({
+				user: req.user.id,
+				_id: req.body.parent,
+			});
+
+			const user = await User.findOne({ _id: req.user.id });
+
+			if (user) {
+				if (user?.usedSpace + file?.size > user?.diskSpace) {
+					return res
+						.status(400)
+						.json({ message: 'There ne space on the disk' });
+				}
+				user.usedSpace += file?.size;
+			}
+
+			let path;
+			if (parent) {
+				path = `${__dirname}\\../files\\${user?.id}\\${parent.path}\\${file?.name}`;
+			} else {
+				path = `${__dirname}\\../files\\${user?.id}\\${file?.name}`;
+			}
+
+			if (fs.existsSync(path)) {
+				return res.status(400).json({ message: 'File already exists' });
+			}
+
+			file?.mv(path);
+
+			const type = file?.name.split('.').pop();
+
+			const dbFile = new File({
+				name: file?.name,
+				type,
+				size: file.size,
+				path: parent?.path,
+				parent: parent?._id,
+				user: user?._id,
+			});
+
+			await dbFile.save();
+			await user?.save();
+
+			res.json(dbFile);
+		} catch (error) {
+			console.log(error);
+			return res.status(500).json({ message: 'Upload error' });
 		}
 	}
 }

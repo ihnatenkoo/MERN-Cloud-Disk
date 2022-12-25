@@ -3,6 +3,7 @@ import { Server } from 'http';
 import config from 'config';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import fileUpload from 'express-fileupload';
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { TYPES } from './types';
@@ -33,6 +34,7 @@ export class App {
 	middleware(): void {
 		this.app.use(cors());
 		this.app.use(express.json());
+		this.app.use(fileUpload({}));
 	}
 
 	async init(): Promise<void> {
