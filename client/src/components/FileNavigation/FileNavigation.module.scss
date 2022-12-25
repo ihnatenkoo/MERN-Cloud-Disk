@@ -6,6 +6,14 @@
 		gap: 0 12px;
 		align-items: center;
 	}
+
+	&__upload {
+		cursor: pointer;
+		border-bottom: 1px dotted var(--black);
+		&_input {
+			display: none;
+		}
+	}
 }
 
 .btn {
