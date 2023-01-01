@@ -5,9 +5,8 @@
 	border-bottom: 1px solid transparent;
 	cursor: pointer;
 
-	&:hover {
-		border-color: var(--gray);
-		font-weight: 600;
+	&__btn {
+		display: none;
 	}
 
 	&__date {
@@ -21,5 +20,32 @@
 	&__date,
 	&__size {
 		justify-self: center;
+	}
+
+	&:hover {
+		border-color: var(--gray);
+		font-weight: 600;
+	}
+
+	&:hover &__date {
+		grid-column-start: 3;
+	}
+	&:hover &__size {
+		grid-column-start: 4;
+	}
+	&:hover &__download {
+		grid-column-start: 5;
+	}
+	&:hover &__delete {
+		grid-column-start: 6;
+	}
+
+	&:hover &__btn {
+		display: block;
+	}
+
+	&__btn:hover span {
+		scale: 1.5;
+		color: var(--blue);
 	}
 }

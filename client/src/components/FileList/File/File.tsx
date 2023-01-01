@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { BaseSyntheticEvent, FC } from 'react';
 import { IFile } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import {
@@ -8,6 +8,7 @@ import {
 } from '../../../store/files/files.slice';
 import cn from 'classnames';
 import s from './File.module.scss';
+import { downloadFile } from '../../../utils/downloadFile';
 
 interface FileProps {
 	file: IFile;
@@ -25,6 +26,11 @@ const File: FC<FileProps> = ({ file }) => {
 		}
 	};
 
+	const onDownloadHandler = async (e: BaseSyntheticEvent) => {
+		e.stopPropagation();
+		downloadFile(file);
+	};
+
 	return (
 		<div className={s.file} onClick={onFileClickHandler}>
 			{file.type === 'dir' ? (
@@ -37,6 +43,18 @@ const File: FC<FileProps> = ({ file }) => {
 			<span>{file.name}</span>
 			<span className={s.file__date}>{file.date.slice(0, 10)}</span>
 			<span className={s.file__size}>{file.size}</span>
+			{file.type !== 'dir' && (
+				<button
+					className={cn(s.file__download, s.file__btn)}
+					onClick={onDownloadHandler}
+				>
+					<span className="material-icons-outlined">file_download</span>
+				</button>
+			)}
+
+			<button className={cn(s.file__delete, s.file__btn)}>
+				<span className="material-icons-outlined">delete</span>
+			</button>
 		</div>
 	);
 };
