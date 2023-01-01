@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import $api from '../../http';
 import { IFile } from '../../types';
 
 interface InitialState {
@@ -17,13 +18,10 @@ const initialState: InitialState = {
 export const getFiles = createAsyncThunk(
 	'files/getFiles',
 	async (parentId?: string | null) => {
-		const { data } = await axios.get(
+		const { data } = await $api.get(
 			`${import.meta.env.VITE_URL}/api/files/${
 				parentId ? '?parent=' + parentId : ''
-			}`,
-			{
-				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-			}
+			}`
 		);
 
 		return data;
@@ -34,17 +32,11 @@ export const createFolder = createAsyncThunk(
 	'files/createFolder',
 	async (folderInfo: { name: string; parent: string | null }) => {
 		const { name, parent } = folderInfo;
-		const { data } = await axios.post(
-			`${import.meta.env.VITE_URL}/api/files`,
-			{
-				name,
-				type: 'dir',
-				parent,
-			},
-			{
-				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-			}
-		);
+		const { data } = await $api.post(`${import.meta.env.VITE_URL}/api/files`, {
+			name,
+			type: 'dir',
+			parent,
+		});
 		return data;
 	}
 );
@@ -59,12 +51,9 @@ export const uploadFile = createAsyncThunk(
 			formData.append('parent', fileInfo.dirId);
 		}
 
-		const { data } = await axios.post(
+		const { data } = await $api.post(
 			`${import.meta.env.VITE_URL}/api/files/upload`,
-			formData,
-			{
-				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-			}
+			formData
 		);
 
 		return data;
@@ -74,11 +63,8 @@ export const uploadFile = createAsyncThunk(
 export const deleteFile = createAsyncThunk(
 	'files/deleteFile',
 	async (file: IFile) => {
-		const response = await axios.delete(
-			`${import.meta.env.VITE_URL}/api/files?id=${file._id}`,
-			{
-				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-			}
+		const response = await $api.delete(
+			`${import.meta.env.VITE_URL}/api/files?id=${file._id}`
 		);
 
 		return file._id;
