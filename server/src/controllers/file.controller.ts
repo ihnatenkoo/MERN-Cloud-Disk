@@ -35,6 +35,12 @@ export class FileController extends BaseController {
 			},
 			{
 				path: '/',
+				method: 'delete',
+				handler: this.deleteFile,
+				middlewares: [new AuthMiddleware()],
+			},
+			{
+				path: '/',
 				method: 'get',
 				handler: this.getFiles,
 				middlewares: [new AuthMiddleware()],
@@ -117,12 +123,16 @@ export class FileController extends BaseController {
 			file?.mv(path);
 
 			const type = file?.name.split('.').pop();
+			let filePath = file.name;
+			if (parent) {
+				filePath = parent.path + '\\' + file.name;
+			}
 
 			const dbFile = new File({
 				name: file?.name,
 				type,
 				size: file.size,
-				path: parent?.path,
+				path: filePath,
 				parent: parent?._id,
 				user: user?._id,
 			});
@@ -150,6 +160,23 @@ export class FileController extends BaseController {
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ message: 'Download Error' });
+		}
+	}
+
+	async deleteFile(req: Request, res: Response) {
+		try {
+			const file = await File.findOne({ _id: req.query.id, user: req.user.id });
+
+			if (!file) {
+				return res.status(400).json({ message: 'File not found' });
+			}
+
+			this.fileService.deleteFile(file);
+			await file?.remove();
+			return res.json({ message: 'File deleted' });
+		} catch (error) {
+			console.log(error);
+			return res.status(400).json({ message: 'Dir is not empty' });
 		}
 	}
 }

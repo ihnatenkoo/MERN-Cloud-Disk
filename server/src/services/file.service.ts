@@ -3,8 +3,12 @@ import { injectable } from 'inversify';
 
 @injectable()
 export class FileService {
+	getPath(file: any) {
+		return `${__dirname}\\../files\\${file.user}\\${file.path}`;
+	}
+
 	createDir(file: any) {
-		const filePath = `${__dirname}\\../files\\${file.user}\\${file.path}`;
+		const filePath = this.getPath(file);
 		return new Promise((resolve, reject) => {
 			try {
 				if (!fs.existsSync(filePath)) {
@@ -18,5 +22,14 @@ export class FileService {
 				return reject({ message: 'Folder created error' });
 			}
 		});
+	}
+
+	deleteFile(file: any) {
+		const path = this.getPath(file);
+		if (file.type == 'dir') {
+			fs.rmdirSync(path);
+		} else {
+			fs.unlinkSync(path);
+		}
 	}
 }
