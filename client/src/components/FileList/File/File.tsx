@@ -3,6 +3,7 @@ import { IFile } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import {
 	changeCurrentDir,
+	deleteFile,
 	getFiles,
 	pushDirStack,
 } from '../../../store/files/files.slice';
@@ -31,6 +32,11 @@ const File: FC<FileProps> = ({ file }) => {
 		downloadFile(file);
 	};
 
+	const onDeleteHandler = async (e: BaseSyntheticEvent) => {
+		e.stopPropagation();
+		dispatch(deleteFile(file));
+	};
+
 	return (
 		<div className={s.file} onClick={onFileClickHandler}>
 			{file.type === 'dir' ? (
@@ -52,7 +58,10 @@ const File: FC<FileProps> = ({ file }) => {
 				</button>
 			)}
 
-			<button className={cn(s.file__delete, s.file__btn)}>
+			<button
+				className={cn(s.file__delete, s.file__btn)}
+				onClick={onDeleteHandler}
+			>
 				<span className="material-icons-outlined">delete</span>
 			</button>
 		</div>

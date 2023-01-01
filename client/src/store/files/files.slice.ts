@@ -71,6 +71,20 @@ export const uploadFile = createAsyncThunk(
 	}
 );
 
+export const deleteFile = createAsyncThunk(
+	'files/deleteFile',
+	async (file: IFile) => {
+		const response = await axios.delete(
+			`${import.meta.env.VITE_URL}/api/files?id=${file._id}`,
+			{
+				headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+			}
+		);
+
+		return file._id;
+	}
+);
+
 export const filesSlice = createSlice({
 	name: 'files',
 	initialState,
@@ -101,9 +115,19 @@ export const filesSlice = createSlice({
 				state.files.push(action.payload);
 			}
 		);
-		builder.addCase(uploadFile.fulfilled, (state, action) => {
-			state.files.push(action.payload);
-		});
+		builder.addCase(
+			uploadFile.fulfilled,
+			(state, action: PayloadAction<IFile>) => {
+				state.files.push(action.payload);
+			}
+		);
+		builder.addCase(
+			deleteFile.fulfilled,
+			(state, action: PayloadAction<string>) => {
+				console.log(action.payload);
+				state.files = state.files.filter((file) => file._id !== action.payload);
+			}
+		);
 	},
 });
 
