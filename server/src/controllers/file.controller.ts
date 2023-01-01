@@ -28,6 +28,12 @@ export class FileController extends BaseController {
 				middlewares: [new AuthMiddleware()],
 			},
 			{
+				path: '/download',
+				method: 'get',
+				handler: this.downloadFile,
+				middlewares: [new AuthMiddleware()],
+			},
+			{
 				path: '/',
 				method: 'get',
 				handler: this.getFiles,
@@ -128,6 +134,22 @@ export class FileController extends BaseController {
 		} catch (error) {
 			console.log(error);
 			return res.status(500).json({ message: 'Upload error' });
+		}
+	}
+
+	async downloadFile(req: Request, res: Response) {
+		try {
+			const file = await File.findOne({ _id: req.query.id, user: req.user.id });
+			const path = `${__dirname}\\../files\\${req.user.id}\\${file?.path}\\${file?.name}`;
+
+			if (file && fs.existsSync(path)) {
+				return res.download(path, file.name);
+			}
+
+			return res.status(400).json({ message: 'File not found' });
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ message: 'Download Error' });
 		}
 	}
 }
