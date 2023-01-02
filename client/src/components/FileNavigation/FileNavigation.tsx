@@ -1,6 +1,10 @@
-import { FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { popDirStack, uploadFile } from '../../store/files/files.slice';
+import {
+	changeSortBy,
+	popDirStack,
+	uploadFile,
+} from '../../store/files/files.slice';
 import MainBtn from '../ui/MainBtn/MainBtn';
 import s from './FileNavigation.module.scss';
 
@@ -12,6 +16,7 @@ const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 	const dispatch = useAppDispatch();
 	const dirStack = useAppSelector((state) => state.files.dirStack);
 	const dirId = useAppSelector((state) => state.files.currentDir);
+	const sortBy = useAppSelector((state) => state.files.sort);
 
 	const handleFolderCreating = () => {
 		setShowPopup(true);
@@ -26,6 +31,10 @@ const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 		files.forEach((file: string | Blob) => {
 			dispatch(uploadFile({ file, dirId }));
 		});
+	};
+
+	const sortChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+		dispatch(changeSortBy(e.target.value));
 	};
 
 	return (
@@ -53,6 +62,18 @@ const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 						className={s.nav__upload_input}
 					/>
 				</form>
+			</div>
+
+			<div className={s.nav__right}>
+				<select
+					value={sortBy}
+					className={s.select}
+					onChange={sortChangeHandler}
+				>
+					<option value="name">Name</option>
+					<option value="type">Type</option>
+					<option value="date">Date</option>
+				</select>
 			</div>
 		</nav>
 	);

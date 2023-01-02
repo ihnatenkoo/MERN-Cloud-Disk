@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
 import $api from '../../http';
 import { IFile } from '../../types';
 
@@ -7,22 +6,38 @@ interface InitialState {
 	files: Array<IFile>;
 	currentDir: string | null;
 	dirStack: Array<string | null>;
+	sort: string;
+}
+interface IGetFilesArgs {
+	parentId?: string | null;
+	sortBy?: string;
 }
 
 const initialState: InitialState = {
 	files: [],
 	currentDir: null,
 	dirStack: [],
+	sort: 'type',
 };
 
 export const getFiles = createAsyncThunk(
 	'files/getFiles',
-	async (parentId?: string | null) => {
-		const { data } = await $api.get(
-			`${import.meta.env.VITE_URL}/api/files/${
-				parentId ? '?parent=' + parentId : ''
-			}`
-		);
+	async ({ parentId, sortBy }: IGetFilesArgs) => {
+		let url = `${import.meta.env.VITE_URL}/api/files`;
+
+		if (parentId) {
+			url = `${import.meta.env.VITE_URL}/api/files?parent=${parentId}`;
+		}
+		if (sortBy) {
+			url = `${import.meta.env.VITE_URL}/api/files?sort=${sortBy}`;
+		}
+		if (parentId && sortBy) {
+			url = `${
+				import.meta.env.VITE_URL
+			}/api/files?parent=${parentId}&sort=${sortBy}`;
+		}
+
+		const { data } = await $api.get(url);
 
 		return data;
 	}
@@ -84,6 +99,9 @@ export const filesSlice = createSlice({
 		popDirStack: (state) => {
 			state.currentDir = state.dirStack.pop()!;
 		},
+		changeSortBy: (state, action: PayloadAction<string>) => {
+			state.sort = action.payload;
+		},
 	},
 	extraReducers(builder) {
 		builder.addCase(
@@ -118,5 +136,5 @@ export const filesSlice = createSlice({
 });
 
 export default filesSlice.reducer;
-export const { changeCurrentDir, pushDirStack, popDirStack } =
+export const { changeCurrentDir, pushDirStack, popDirStack, changeSortBy } =
 	filesSlice.actions;

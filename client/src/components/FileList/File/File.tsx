@@ -22,7 +22,7 @@ const File: FC<FileProps> = ({ file }) => {
 
 	const onFileClickHandler = () => {
 		if (file.type === 'dir') {
-			dispatch(getFiles(file._id));
+			dispatch(getFiles({ parentId: file._id }));
 			dispatch(changeCurrentDir(file._id));
 			dispatch(pushDirStack(currentDir));
 		}

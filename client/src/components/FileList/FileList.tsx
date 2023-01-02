@@ -8,12 +8,13 @@ import './file-animation.scss';
 
 const FileList: FC = () => {
 	const dispatch = useAppDispatch();
-	const currentDir = useAppSelector((state) => state.files.currentDir);
+	const parentId = useAppSelector((state) => state.files.currentDir);
 	const files = useAppSelector((state) => state.files.files);
+	const sortBy = useAppSelector((state) => state.files.sort);
 
 	useEffect(() => {
-		dispatch(getFiles(currentDir));
-	}, [currentDir]);
+		dispatch(getFiles({ parentId, sortBy }));
+	}, [parentId, sortBy]);
 
 	return (
 		<div className={s.list}>

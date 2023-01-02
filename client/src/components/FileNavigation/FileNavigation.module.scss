@@ -1,5 +1,8 @@
 .nav {
 	margin-bottom: 30px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
 	&__left {
 		display: flex;
@@ -13,6 +16,10 @@
 		&_input {
 			display: none;
 		}
+	}
+
+	.select {
+		padding: 2px;
 	}
 }
 
