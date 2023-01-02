@@ -1,8 +1,10 @@
 import { FC, useEffect } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getFiles } from '../../store/files/files.slice';
 import File from './File/File';
 import s from './FileList.module.scss';
+import './file-animation.scss';
 
 const FileList: FC = () => {
 	const dispatch = useAppDispatch();
@@ -24,9 +26,18 @@ const FileList: FC = () => {
 				{!files?.length && (
 					<p className={s.list__content_empty}>No files uploaded</p>
 				)}
-				{files?.map((file) => (
-					<File file={file} key={file._id} />
-				))}
+				<TransitionGroup>
+					{files?.map((file) => (
+						<CSSTransition
+							key={file._id}
+							timeout={500}
+							classNames={'file'}
+							exit={false}
+						>
+							<File file={file} />
+						</CSSTransition>
+					))}
+				</TransitionGroup>
 			</div>
 		</div>
 	);
