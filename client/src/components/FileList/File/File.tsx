@@ -10,6 +10,7 @@ import {
 import cn from 'classnames';
 import s from './File.module.scss';
 import { downloadFile } from '../../../utils/downloadFile';
+import sizeFormat from '../../../utils/sizeFormat';
 
 interface FileProps {
 	file: IFile;
@@ -46,9 +47,14 @@ const File: FC<FileProps> = ({ file }) => {
 					description
 				</span>
 			)}
+
 			<span>{file.name}</span>
 			<span className={s.file__date}>{file.date.slice(0, 10)}</span>
-			<span className={s.file__size}>{file.size}</span>
+
+			{file.type !== 'dir' && (
+				<span className={s.file__size}>{sizeFormat(file.size)}</span>
+			)}
+
 			{file.type !== 'dir' && (
 				<button
 					className={cn(s.file__download, s.file__btn)}
