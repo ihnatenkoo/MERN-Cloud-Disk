@@ -10,6 +10,12 @@ import { TYPES } from '../types';
 import File from '../models/File';
 import User from '../models/User';
 
+enum SORT_TYPES {
+	NAME = 'name',
+	TYPE = 'type',
+	DATE = 'date',
+}
+
 @injectable()
 export class FileController extends BaseController {
 	constructor(@inject(TYPES.FileService) private fileService: FileService) {
@@ -78,10 +84,38 @@ export class FileController extends BaseController {
 
 	async getFiles(req: Request, res: Response): Promise<void> {
 		try {
-			const files = await File.find({
-				user: req.user.id,
-				parent: req.query.parent,
-			});
+			const { sort } = req.query;
+			let files;
+
+			switch (sort) {
+				case SORT_TYPES.NAME:
+					files = await File.find({
+						user: req.user.id,
+						parent: req.query.parent,
+					}).sort({ name: 1 });
+					break;
+
+				case SORT_TYPES.TYPE:
+					files = await File.find({
+						user: req.user.id,
+						parent: req.query.parent,
+					}).sort({ type: 1 });
+					break;
+
+				case SORT_TYPES.DATE:
+					files = await File.find({
+						user: req.user.id,
+						parent: req.query.parent,
+					}).sort({ date: 1 });
+					break;
+
+				default:
+					files = await File.find({
+						user: req.user.id,
+						parent: req.query.parent,
+					});
+			}
+
 			res.status(200).json(files);
 		} catch (error) {
 			console.log(error);
