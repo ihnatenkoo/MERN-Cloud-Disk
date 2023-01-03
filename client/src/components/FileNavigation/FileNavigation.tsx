@@ -2,9 +2,11 @@ import { ChangeEvent, FC } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
 	changeSortBy,
+	changeView,
 	popDirStack,
 	uploadFile,
 } from '../../store/files/files.slice';
+import { TSort } from '../../store/files/type';
 import MainBtn from '../ui/MainBtn/MainBtn';
 import s from './FileNavigation.module.scss';
 
@@ -34,7 +36,7 @@ const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 	};
 
 	const sortChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-		dispatch(changeSortBy(e.target.value));
+		dispatch(changeSortBy(e.target.value as TSort));
 	};
 
 	return (
@@ -74,6 +76,12 @@ const FileNavigation: FC<IFileNavigation> = ({ setShowPopup }) => {
 					<option value="type">Type</option>
 					<option value="date">Date</option>
 				</select>
+				<button className={s.btn} onClick={() => dispatch(changeView('list'))}>
+					<span className="material-icons-outlined">format_list_bulleted</span>
+				</button>
+				<button className={s.btn} onClick={() => dispatch(changeView('plate'))}>
+					<span className="material-icons-outlined">list_alt</span>
+				</button>
 			</div>
 		</nav>
 	);

@@ -34,4 +34,12 @@
 			color: var(--blue);
 		}
 	}
+
+	.plate {
+		padding-left: 42px;
+		padding-right: 42px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 42px;
+	}
 }

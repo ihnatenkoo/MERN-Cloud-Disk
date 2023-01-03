@@ -7,10 +7,10 @@ import {
 	getFiles,
 	pushDirStack,
 } from '../../../store/files/files.slice';
-import cn from 'classnames';
-import s from './File.module.scss';
 import { downloadFile } from '../../../utils/downloadFile';
 import sizeFormat from '../../../utils/sizeFormat';
+import cn from 'classnames';
+import s from './File.module.scss';
 
 interface FileProps {
 	file: IFile;
@@ -19,6 +19,7 @@ interface FileProps {
 const File: FC<FileProps> = ({ file }) => {
 	const dispatch = useAppDispatch();
 	const currentDir = useAppSelector((state) => state.files.currentDir);
+	const view = useAppSelector((state) => state.files.view);
 
 	const onFileClickHandler = () => {
 		if (file.type === 'dir') {
@@ -39,7 +40,10 @@ const File: FC<FileProps> = ({ file }) => {
 	};
 
 	return (
-		<div className={s.file} onClick={onFileClickHandler}>
+		<div
+			className={cn(s.file, { [s.plate]: view === 'plate' })}
+			onClick={onFileClickHandler}
+		>
 			{file.type === 'dir' ? (
 				<span className={cn(s.file__type, 'material-icons')}>folder_open</span>
 			) : (
@@ -48,10 +52,13 @@ const File: FC<FileProps> = ({ file }) => {
 				</span>
 			)}
 
-			<span>{file.name}</span>
-			<span className={s.file__date}>{file.date.slice(0, 10)}</span>
+			<span>{view === 'list' ? file.name : file.name.slice(0, 15)}</span>
 
-			{file.type !== 'dir' && (
+			{view === 'list' && (
+				<span className={s.file__date}>{file.date.slice(0, 10)}</span>
+			)}
+
+			{view === 'list' && file.type !== 'dir' && (
 				<span className={s.file__size}>{sizeFormat(file.size)}</span>
 			)}
 

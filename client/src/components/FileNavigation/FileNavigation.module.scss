@@ -18,8 +18,18 @@
 		}
 	}
 
-	.select {
-		padding: 2px;
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: 0 12px;
+
+		.btn:hover {
+			color: var(--blue);
+		}
+
+		.select {
+			padding: 2px;
+		}
 	}
 }
 

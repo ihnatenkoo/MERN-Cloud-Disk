@@ -1,16 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import $api from '../../http';
 import { IFile } from '../../types';
+import { IGetFilesArgs, TSort, TView } from './type';
 
 interface InitialState {
 	files: Array<IFile>;
 	currentDir: string | null;
 	dirStack: Array<string | null>;
-	sort: string;
-}
-interface IGetFilesArgs {
-	parentId?: string | null;
-	sortBy?: string;
+	sort: TSort;
+	view: TView;
 }
 
 const initialState: InitialState = {
@@ -18,6 +16,7 @@ const initialState: InitialState = {
 	currentDir: null,
 	dirStack: [],
 	sort: 'type',
+	view: 'list',
 };
 
 export const getFiles = createAsyncThunk(
@@ -99,8 +98,11 @@ export const filesSlice = createSlice({
 		popDirStack: (state) => {
 			state.currentDir = state.dirStack.pop()!;
 		},
-		changeSortBy: (state, action: PayloadAction<string>) => {
+		changeSortBy: (state, action: PayloadAction<TSort>) => {
 			state.sort = action.payload;
+		},
+		changeView: (state, action: PayloadAction<TView>) => {
+			state.view = action.payload;
 		},
 	},
 	extraReducers(builder) {
@@ -136,5 +138,10 @@ export const filesSlice = createSlice({
 });
 
 export default filesSlice.reducer;
-export const { changeCurrentDir, pushDirStack, popDirStack, changeSortBy } =
-	filesSlice.actions;
+export const {
+	changeCurrentDir,
+	pushDirStack,
+	popDirStack,
+	changeSortBy,
+	changeView,
+} = filesSlice.actions;
